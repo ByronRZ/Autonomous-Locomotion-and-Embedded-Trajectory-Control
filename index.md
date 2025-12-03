@@ -1,8 +1,8 @@
 ---
 layout: home
-title: Inicio
+title: Start
 nav_order: 1
 ---
 
-# Bienvenido a la Documentación
+# Introduction
 Esta es la página principal de mi robot. Aquí irán las instrucciones y diagramas.
