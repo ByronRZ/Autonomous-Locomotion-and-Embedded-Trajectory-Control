@@ -1,8 +1,8 @@
 ---
 layout: home
-title: Start
+title: Inicio
 nav_order: 1
 ---
 
-# Introduction
-Esta es la página principal de mi robot. Aquí irán las instrucciones y diagramas.
+# Bienvenido a la Documentación
+Esta es la página principal del proyecto de locomoción autónoma.
