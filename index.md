@@ -1,8 +1,8 @@
 ---
 layout: home
-title: Inicio
+title: Home
 nav_order: 1
 ---
 
-# Bienvenido a la Documentación
-Esta es la página principal del proyecto de locomoción autónoma.
+# Design of Autonomous Locomotion and Embedded Trajectory Control
+
