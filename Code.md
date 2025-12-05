@@ -5,6 +5,7 @@ nav_order: 3
 ---
 
 # Design of Autonomous Locomotion and Embedded Trajectory Control
+
 ```cpp
 #include <ArduinoBLE.h>
 #include <Wire.h>
