@@ -209,3 +209,6 @@ void loop() {
 
   delay(10); // 50 Hz
 }
+```
+## Design of Autonomous Locomotion and Embedded Trajectory Control
+
