@@ -1,0 +1,13 @@
+/* Caja estilo Just the Docs para código */
+.code-box {
+  border-left: 4px solid #2ecc71;  /* línea verde tipo “note” */
+  background-color: #f4fff8;       /* fondo verde muy claro */
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 6px;
+}
+
+/* Ajuste para que el primer texto no tenga espacio arriba */
+.code-box p:first-child {
+  margin-top: 0;
+}
