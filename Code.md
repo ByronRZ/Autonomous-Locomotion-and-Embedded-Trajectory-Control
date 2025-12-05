@@ -41,15 +41,15 @@ float P = 0;
 float x_est = 0;
 
 // PID
-double setpoint = 0;   // Queremos que yaw sea 0 (recto)
+double setpoint = 0;    // Queremos que yaw sea 0 (recto)
 double input, output;
-double Kp = 700, Ki = 0, Kd = 80;   // Ajustar en pruebas
+double Kp = 700, Ki = 0, Kd = 80;    // Ajustar en pruebas
 PID pid(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
 
 // Frecuencias base
-const float FRECUENCIA_BASE = 20000;   // Base para ambos
-const float AJUSTE_MAXIMO_A = 3000;    // Hasta 37500 (40000 - 2500)
-const float AJUSTE_MAXIMO_B = 3000;    // Hasta 37000 (40000 - 3000)
+const float FRECUENCIA_BASE = 20000;    // Base para ambos
+const float AJUSTE_MAXIMO_A = 3000;     // Hasta 37500 (40000 - 2500)
+const float AJUSTE_MAXIMO_B = 3000;     // Hasta 37000 (40000 - 3000)
 float FrecuenciaA=0;
 float FrecuenciaB=0;
 
@@ -94,7 +94,7 @@ void setup() {
   digitalWrite(LED_BLUE, LOW);
   digitalWrite(LED_RED, HIGH);
   digitalWrite(LED_GREEN, HIGH);
-  
+   
   // BLE
   if (!BLE.begin()) {
     Serial.println("BLE no inició");
@@ -111,7 +111,7 @@ void setup() {
     Serial.println("Error: No se pudo iniciar el LSM6DS3");
     while (1);
   }
-  
+   
   Serial.println("IMU LSM6DS3 inicializada");
   delay(4000);
   digitalWrite(LED_BLUE, HIGH);
@@ -155,7 +155,7 @@ void loop() {
   float frecuenciaA = FRECUENCIA_BASE;
   if (output > 0)
     frecuenciaA -= constrain(output, 0, AJUSTE_MAXIMO_A);
-    
+     
   else if (output < 0)
     frecuenciaA += constrain(abs(output), 0, AJUSTE_MAXIMO_B);
 
