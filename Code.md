@@ -8,6 +8,7 @@ nav_order: 3
 
 <div class="code-box" markdown="1">
 
+{% raw %}
 ```cpp
 #include <ArduinoBLE.h>
 #include <Wire.h>
@@ -25,35 +26,36 @@ BLEIntCharacteristic miCaracteristica("abcdef01-1234-5678-1234-56789abcdef0", BL
 // PWM en pines
 PwmOut pwm_A(digitalPinToPinName(0));
 PwmOut pwm_B(digitalPinToPinName(2));
-int salir = 0;
+int salir=0;
 
 // Variables yaw y filtros
 float yaw = 0;
 float gzOffset = 0.0;
-float deadband = 2;
+//float deadband = 0.5;
+float deadband = 2;//9
 unsigned long lastUpdate = 0;
 
 // Variables del filtro Kalman
 float x_est_last = 0;
 float P_last = 1;
-const float Q = 0.01;
-const float R = 100;
+const float Q = 0.01;//0.01
+const float R = 100;//100
 float Kalm = 0;
 float P = 0;
 float x_est = 0;
 
 // PID
-double setpoint = 0; 
+double setpoint = 0;    // Queremos que yaw sea 0 (recto)
 double input, output;
-double Kp = 700, Ki = 0, Kd = 80;
+double Kp = 700, Ki = 0, Kd = 80;    // Ajustar en pruebas
 PID pid(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
 
 // Frecuencias base
-const float FRECUENCIA_BASE = 20000;
-const float AJUSTE_MAXIMO_A = 3000;
-const float AJUSTE_MAXIMO_B = 3000;
-float FrecuenciaA = 0;
-float FrecuenciaB = 0;
+const float FRECUENCIA_BASE = 20000;    // Base para ambos
+const float AJUSTE_MAXIMO_A = 3000;     // Hasta 37500 (40000 - 2500)
+const float AJUSTE_MAXIMO_B = 3000;     // Hasta 37000 (40000 - 3000)
+float FrecuenciaA=0;
+float FrecuenciaB=0;
 
 // Duty Cycle fijo
 float DC_A = 0.7;
@@ -96,7 +98,7 @@ void setup() {
   digitalWrite(LED_BLUE, LOW);
   digitalWrite(LED_RED, HIGH);
   digitalWrite(LED_GREEN, HIGH);
-
+   
   // BLE
   if (!BLE.begin()) {
     Serial.println("BLE no inició");
@@ -113,7 +115,7 @@ void setup() {
     Serial.println("Error: No se pudo iniciar el LSM6DS3");
     while (1);
   }
-
+   
   Serial.println("IMU LSM6DS3 inicializada");
   delay(4000);
   digitalWrite(LED_BLUE, HIGH);
@@ -122,8 +124,9 @@ void setup() {
   digitalWrite(LED_RED, HIGH);
   lastUpdate = millis();
 
+  // PID
   pid.SetMode(AUTOMATIC);
-  pid.SetOutputLimits(-10000, 10000);
+  pid.SetOutputLimits(-10000, 10000);  // Ajuste total máximo
 }
 
 // ----------- LOOP -----------
@@ -136,6 +139,7 @@ void loop() {
   float dt = (now - lastUpdate) / 1000.0;
   lastUpdate = now;
 
+  // Leer giroscopio Z y filtrar
   float gz = imu.readFloatGyroZ();
   gz = kalmanFilter(gz);
   gz -= gzOffset;
@@ -144,14 +148,15 @@ void loop() {
     gz = 0;
   }
 
+  // Integrar yaw
   yaw += gz * dt;
-  if (yaw > 180) yaw = 180;
+  if (yaw > 180) yaw = 180 ;
   if (yaw < -180) yaw = -180;
 
+  // PID
   input = yaw;
   pid.Compute();
   float frecuenciaA = FRECUENCIA_BASE;
-
   if (output > 0)
     frecuenciaA -= constrain(output, 0, AJUSTE_MAXIMO_A);
   else if (output < 0)
@@ -162,6 +167,7 @@ void loop() {
   pwm_A.write(0.7);
   pwm_B.write(0.7);
 
+  // Monitor
   Serial.print(yaw, 1);
   Serial.print(",");
   Serial.print(frecuenciaA);
@@ -172,6 +178,5 @@ void loop() {
 
   miCaracteristica.writeValue(yaw);
 
-  delay(10); 
+  delay(10); // 50 Hz
 }
-
